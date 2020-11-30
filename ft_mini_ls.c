@@ -3,9 +3,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-void    ft_putstr(char *s)
+void    ft_put_d_name(char *s)
 {
-    int     i;
+    size_t     i;
 
     i = 0;
     while (s[i])
@@ -13,11 +13,12 @@ void    ft_putstr(char *s)
         write(1, &s[i], 1);
         i++;
     }
+    write(1, "\n", 1);
 }
 
-int     ft_strlen(char *s)
+size_t  ft_strlen(char *s)
 {
-    int     i;
+    size_t     i;
 
     i = 0;
     while (s[i])
@@ -25,42 +26,55 @@ int     ft_strlen(char *s)
     return (i);
 }
 
-char    *ft_parse_args(int argc, char **argv)
+char    *ft_strdup(char *s)
 {
-    char   *path;
-    char    *tmp;
-    int     len;
+    size_t      i;
+    size_t      len;
+    char        *ret_str;
 
-    path = (char *)malloc(3);
-    path = "./";
-    if (argc == 2)
+    len = ft_strlen(s);
+    ret_str = (char *)malloc(len + 1);
+    i = 0;
+    while (s[i])
     {
-        len = ft_strlen(argv[1]);
-        tmp = (char *)malloc(len + 1);
-        free(path);
-        path = tmp;
+        ret_str[i] = s[i];
+        i++;
     }
-    return (path);
+    ret_str[i] = '\0';
+    return (ret_str);
 }
 
-int main(int argc, char **argv)
+void    ft_mini_ls(int argc, char **argv)
 {
-    DIR     *dir;
-    struct dirent *dent;
-    char    *path;
+    DIR             *dir;
+    struct dirent   *dent;
+    char            *path;
 
-    path = ft_parse_args(argc, argv);
+    path = (char *)malloc(3);
+    path[0] = '.';
+    path[1] = '/';
+    path[2] = '\0';
+    if (argc == 2)
+    {
+        free(path);
+        path = ft_strdup(argv[1]);
+    }
+    //path = ft_parse_args(argc, argv);
     dir = opendir(path);
     if (dir == NULL)
     {
         perror(path);
-        return (1);
+        return ;
     }
     while ((dent = readdir(dir)) != NULL)
-    {
-        ft_putstr(dent->d_name);
-        ft_putstr("\n");
-    }
+        ft_put_d_name(dent->d_name);
     closedir(dir);
+    free(path);
+}
+
+int     main(int argc, char **argv)
+{
+    ft_mini_ls(argc, argv);
+    //while (1);
     return (0);
 }
