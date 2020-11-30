@@ -44,22 +44,12 @@ char    *ft_strdup(char *s)
     return (ret_str);
 }
 
-void    ft_mini_ls(int argc, char **argv)
+void    ft_ls_option_aorlargea(char *path, char *option)
 {
     DIR             *dir;
     struct dirent   *dent;
-    char            *path;
+    char            *name;
 
-    path = (char *)malloc(3);
-    path[0] = '.';
-    path[1] = '/';
-    path[2] = '\0';
-    if (argc == 2)
-    {
-        free(path);
-        path = ft_strdup(argv[1]);
-    }
-    //path = ft_parse_args(argc, argv);
     dir = opendir(path);
     if (dir == NULL)
     {
@@ -67,8 +57,62 @@ void    ft_mini_ls(int argc, char **argv)
         return ;
     }
     while ((dent = readdir(dir)) != NULL)
-        ft_put_d_name(dent->d_name);
+    {
+        name = dent->d_name;
+        if (option[1] == 'a')
+            ft_put_d_name(name);
+        else if (option[1] == 'A')
+        {
+            if (!((name[0] == '.' && name[1] == '\0') ||
+                    (name[0] == '.' && name[1] == '.' && name[2] == '\0')))
+                ft_put_d_name(name);
+        }
+    }
     closedir(dir);
+}
+
+void    ft_ls_default(char *path)
+{
+    DIR             *dir;
+    struct dirent   *dent;
+    char            *name;
+
+    dir = opendir(path);
+    if (dir == NULL)
+    {
+        perror(path);
+        return ;
+    }
+    while ((dent = readdir(dir)) != NULL)
+    {
+        name = dent->d_name;
+        if (name[0] != '.')
+            ft_put_d_name(name);
+    }
+    closedir(dir);
+}
+
+void    ft_mini_ls(int argc, char **argv)
+{
+    char            *path;
+
+    path = (char *)malloc(3);
+    path[0] = '.';
+    path[1] = '/';
+    path[2] = '\0';
+    if (argc == 1)
+        ft_ls_default(path);
+    else if (argc == 2)
+    {
+        if (argv[1][0] != '-')
+        {
+            free(path);
+            path = ft_strdup(argv[1]);
+            ft_ls_default(path);
+        }
+        else if (argv[1][0] == '-' && (argv[1][1] == 'a' || argv[1][1] == 'A') && argv[1][2] == '\0')
+            ft_ls_option_aorlargea(path, argv[1]);
+    }
     free(path);
 }
 
