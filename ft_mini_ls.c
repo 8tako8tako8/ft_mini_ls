@@ -1,98 +1,151 @@
-#include <stdio.h>
-#include <dirent.h>
-#include <unistd.h>
-#include <stdlib.h>
+#include "ft_mini_ls.h"
 
-void    ft_put_d_name(char *s)
+size_t	ft_strlen(const char *s)
 {
-    size_t     i;
+	size_t		i;
 
-    i = 0;
-    while (s[i])
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
+t_list		*ft_lstnew(char *name, size_t time)
+{
+	t_list	*newlist;
+
+	if (!(newlist = (t_list *)malloc(sizeof(t_list))))
+		return (0);
+	newlist->name = name;
+	newlist->time = time;
+	newlist->next = NULL;
+	return (newlist);
+}
+
+void	    ft_lstadd_front(t_list **lst, t_list *new)
+{
+	if (!lst || !new)
+		return ;
+	new->next = *lst;
+	*lst = new;
+}
+
+int		ft_lstsize(t_list *lst)
+{
+	t_list	*curr_lst;
+	int		i;
+
+	if (lst == NULL)
+		return (0);
+	curr_lst = lst;
+	i = 1;
+	while (curr_lst->next != NULL)
+	{
+		curr_lst = curr_lst->next;
+		i++;
+	}
+	return (i);
+}
+
+void    ft_lstswap(t_list **list)
+{
+	size_t	tmp1;
+	char	*tmp2;
+
+	tmp1 = (*list)->time;
+    tmp2 = (*list)->name;
+	(*list)->time = (*list)->next->time;
+    (*list)->name = (*list)->next->name;
+	(*list)->next->time = tmp1;
+	(*list)->next->name = tmp2;
+}
+
+void    ft_lst_sort(t_list **begin_list)
+{
+	t_list	*cur_list;
+	int		list_size;
+	int		i;
+	int		j;
+
+	list_size = 1;
+	cur_list = *begin_list;
+    list_size = ft_lstsize(cur_list);
+	i = 0;
+	while (i < list_size)
+	{
+		j = 0;
+		while (j < list_size - i - 1)
+		{
+			if ((cur_list->time - cur_list->next->time) > 0)
+			{
+                ft_lstswap(&cur_list);
+			}
+			cur_list = cur_list->next;
+			j++;
+		}
+		cur_list = *begin_list;
+		i++;
+	}
+}
+
+void    ft_putlst(t_list *list)
+{
+    while (list != NULL)
     {
-        write(1, &s[i], 1);
-        i++;
+        write(1, list->name, ft_strlen(list->name));
+        write(1, "\n", 1);
+        list = list->next;
     }
-    write(1, "\n", 1);
 }
 
-size_t  ft_strlen(char *s)
+t_list  *ft_lstnew_first(struct dirent *dirst, DIR *dir, int *flag)
 {
-    size_t     i;
+    struct stat     buf;
+    t_list          *list;
 
-    i = 0;
-    while (s[i])
-        i++;
-    return (i);
-}
-
-char    *ft_strdup(char *s)
-{
-    size_t      i;
-    size_t      len;
-    char        *ret_str;
-
-    len = ft_strlen(s);
-    ret_str = (char *)malloc(len + 1);
-    i = 0;
-    while (s[i])
+    list = NULL;
+    dirst = readdir(dir);
+    if (dirst->d_name[0] != '.')
     {
-        ret_str[i] = s[i];
-        i++;
+        *flag = 1;
+        lstat(dirst->d_name, &buf);
+        list = ft_lstnew(dirst->d_name, (size_t)buf.st_mtimespec.tv_sec);
     }
-    ret_str[i] = '\0';
-    return (ret_str);
+    return (list);
 }
 
-void    ft_ls_option_aorlargea(char *path, char *option)
+void    ft_mini_ls(char *path)
 {
     DIR             *dir;
-    struct dirent   *dent;
-    char            *name;
+    struct dirent   *dirst;
+    struct stat     buf;
+    t_list          *list;
+    int             flag;
 
+    dirst = NULL;
     dir = opendir(path);
     if (dir == NULL)
     {
         perror(path);
         return ;
     }
-    while ((dent = readdir(dir)) != NULL)
+    flag = 0;
+    while (flag == 0)
+        list = ft_lstnew_first(dirst, dir, &flag);
+    while ((dirst = readdir(dir)) != NULL)
     {
-        name = dent->d_name;
-        if (option[1] == 'a')
-            ft_put_d_name(name);
-        else if (option[1] == 'A')
+        if (dirst->d_name[0] != '.')
         {
-            if (!((name[0] == '.' && name[1] == '\0') ||
-                    (name[0] == '.' && name[1] == '.' && name[2] == '\0')))
-                ft_put_d_name(name);
+            lstat(dirst->d_name, &buf);
+            ft_lstadd_front(&list, ft_lstnew(dirst->d_name, (size_t)buf.st_mtimespec.tv_sec));
         }
     }
+    ft_lst_sort(&list);
+    ft_putlst(list);
     closedir(dir);
 }
 
-void    ft_ls_default(char *path)
-{
-    DIR             *dir;
-    struct dirent   *dent;
-    char            *name;
-
-    dir = opendir(path);
-    if (dir == NULL)
-    {
-        perror(path);
-        return ;
-    }
-    while ((dent = readdir(dir)) != NULL)
-    {
-        name = dent->d_name;
-        if (name[0] != '.')
-            ft_put_d_name(name);
-    }
-    closedir(dir);
-}
-
-void    ft_mini_ls(int argc, char **argv)
+int     main(int argc, char **argv)
 {
     char            *path;
 
@@ -101,24 +154,9 @@ void    ft_mini_ls(int argc, char **argv)
     path[1] = '/';
     path[2] = '\0';
     if (argc == 1)
-        ft_ls_default(path);
-    else if (argc == 2)
-    {
-        if (argv[1][0] != '-')
-        {
-            free(path);
-            path = ft_strdup(argv[1]);
-            ft_ls_default(path);
-        }
-        else if (argv[1][0] == '-' && (argv[1][1] == 'a' || argv[1][1] == 'A') && argv[1][2] == '\0')
-            ft_ls_option_aorlargea(path, argv[1]);
-    }
-    free(path);
-}
-
-int     main(int argc, char **argv)
-{
-    ft_mini_ls(argc, argv);
-    //while (1);
+        ft_mini_ls(path);
+    else if (argc > 1)
+        write(2, "Commandline arguments can't be used\n", 36);
+    (void)argv[0];
     return (0);
 }
