@@ -27,14 +27,14 @@ void	ft_lst_sort(t_list **begin_list)
 	cur_list = *begin_list;
 	list_size = ft_lstsize(cur_list);
 	i = 0;
-	while (i < list_size)
+	while (i < list_size - 1)
 	{
-		j = 0;
-		while (j < list_size - i - 1)
+		j = list_size - 1;
+		while (j > i)
 		{
 			ft_cmp_time_and_name_to_sort(cur_list);
 			cur_list = cur_list->next;
-			j++;
+			j--;
 		}
 		cur_list = *begin_list;
 		i++;
