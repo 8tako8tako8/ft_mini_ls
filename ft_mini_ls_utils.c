@@ -13,7 +13,7 @@ t_list		*ft_lstnew(char *name, long s_time, long n_time)
 	return (newlist);
 }
 
-void	    ft_lstadd_front(t_list **lst, t_list *new)
+void		ft_lstadd_front(t_list **lst, t_list *new)
 {
 	if (!lst || !new)
 		return ;
@@ -21,7 +21,7 @@ void	    ft_lstadd_front(t_list **lst, t_list *new)
 	*lst = new;
 }
 
-int			ft_lstsize(t_list *lst)
+int		ft_lstsize(t_list *lst)
 {
 	t_list	*curr_lst;
 	int		i;
@@ -38,7 +38,7 @@ int			ft_lstsize(t_list *lst)
 	return (i);
 }
 
-void    	ft_lstswap(t_list **list)
+void		ft_lstswap(t_list **list)
 {
 	long	tmp1;
 	long	tmp2;
@@ -46,10 +46,10 @@ void    	ft_lstswap(t_list **list)
 
 	tmp1 = (*list)->s_time;
 	tmp2 = (*list)->n_time;
-    tmp3 = (*list)->name;
+	tmp3 = (*list)->name;
 	(*list)->s_time = (*list)->next->s_time;
 	(*list)->n_time = (*list)->next->n_time;
-    (*list)->name = (*list)->next->name;
+	(*list)->name = (*list)->next->name;
 	(*list)->next->s_time = tmp1;
 	(*list)->next->n_time = tmp2;
 	(*list)->next->name = tmp3;
