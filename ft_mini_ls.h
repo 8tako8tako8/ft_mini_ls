@@ -22,6 +22,7 @@ t_list		            *ft_lstnew(char *name, long s_time, long n_time);
 int		                ft_lstsize(t_list *lst);
 void	                ft_lstadd_front(t_list **lst, t_list *new);
 void                    ft_lstswap(t_list **list);
+void	                ft_lstclear(t_list **lst);
 void                    ft_cmp_time_and_name_to_sort(t_list *cur_list);
 void                    ft_lst_sort(t_list **begin_list);
 void                    ft_lstadd_except_hidden_files(struct dirent **dirst, t_list **list);

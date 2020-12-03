@@ -63,9 +63,10 @@ void		ft_mini_ls(char *path)
 	else
 	{
 		ft_lst_sort(&list);
-		ft_putlst(list);
-		closedir(dir);
+		ft_putlst(list);	
 	}
+	ft_lstclear(&list);
+	closedir(dir);
 }
 
 int		 main(int argc, char **argv)
@@ -81,5 +82,6 @@ int		 main(int argc, char **argv)
 	else if (argc > 1)
 		write(2, "Commandline arguments can't be used\n", 36);
 	(void)argv[0];
+	free(path);
 	return (0);
 }

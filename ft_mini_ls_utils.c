@@ -54,3 +54,22 @@ void		ft_lstswap(t_list **list)
 	(*list)->next->n_time = tmp2;
 	(*list)->next->name = tmp3;
 }
+
+void	ft_lstclear(t_list **lst)
+{
+	t_list	*tmp;
+
+	if (!lst || !*lst)
+		return ;
+	tmp = NULL;
+	while (*lst != NULL)
+	{
+		tmp = (*lst)->next;
+		(*lst)->s_time = 0;
+		(*lst)->n_time = 0;
+		(*lst)->name = NULL;
+		free(*lst);
+		*lst = tmp;
+	}
+	*lst = NULL;
+}
