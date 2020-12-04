@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_mini_ls.h                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmorimot <kmorimot@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/03 19:55:00 by kmorimot          #+#    #+#             */
+/*   Updated: 2020/12/04 19:23:46 by kmorimot         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_MINI_LS_H
 # define FT_MINI_LS_H
 
@@ -6,28 +18,32 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
- 
-typedef struct          s_list
-{
-    struct s_list       *next;
-    char                *name;
-    long                s_time;
-    long                n_time;
-}                       t_list;
+# include <string.h>
+# include <errno.h>
 
-void                    ft_putlst(t_list *list);
-size_t	                ft_strlen(const char *s);
-int                     ft_strcmp(char *s1, char *s2);
-t_list		            *ft_lstnew(char *name, long s_time, long n_time);
-int		                ft_lstsize(t_list *lst);
-void	                ft_lstadd_front(t_list **lst, t_list *new);
-void                    ft_lstswap(t_list **list);
-void	                ft_lstclear(t_list **lst);
-void                    ft_cmp_time_and_name_to_sort(t_list *cur_list);
-void                    ft_lst_sort(t_list **begin_list);
-void                    ft_lstadd_except_hidden_files(struct dirent **dirst, t_list **list);
-t_list                  *ft_lstnew_first_except_hidden_files(struct dirent **dirst, DIR **dir, int *flag);
-int                     ft_opendir(char *path, DIR **dir);
-void                    ft_mini_ls(char *path);
+typedef struct		s_data
+{
+	struct s_data	*next;
+	char			*name;
+	long			s_time;
+	long			n_time;
+}					t_data;
+
+void				ft_putlst(t_data *list);
+int					ft_strcmp(char *s1, char *s2);
+void				ft_lstclear_and_closedir(t_data **list, DIR **dir);
+t_data				*ft_lstnew_ex(char *name, long s_time, long n_time);
+int					ft_lstsize_ex(t_data *lst);
+int					ft_lstadd_front_ex(t_data **lst, t_data *new);
+void				ft_lstswap(t_data **list);
+void				ft_lstclear_ex(t_data **lst);
+void				ft_cmp_time_and_name_to_sort(t_data *cur_list);
+void				ft_lst_sort(t_data **begin_list);
+int					ft_lstadd_except_hidden_files(struct dirent **dirst,
+						t_data **list);
+t_data				*ft_lstnew_first_except_hidden_files(struct dirent **dirst,
+						DIR **dir, int *flag);
+int					ft_opendir(char *path, DIR **dir);
+void				ft_mini_ls(char *path);
 
 #endif

@@ -1,29 +1,69 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_mini_ls_utils.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmorimot <kmorimot@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/03 21:06:51 by kmorimot          #+#    #+#             */
+/*   Updated: 2020/12/04 19:25:14 by kmorimot         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_mini_ls.h"
+#include "libft/libft.h"
 
-t_list		*ft_lstnew(char *name, long s_time, long n_time)
+void		ft_lstclear_and_closedir(t_data **list, DIR **dir)
 {
-	t_list	*newlist;
+	ft_putstr_fd(strerror(errno), 2);
+	ft_lstclear_ex(list);
+	closedir(*dir);
+}
 
-	if (!(newlist = (t_list *)malloc(sizeof(t_list))))
-		return (0);
-	newlist->name = name;
+void		ft_lstclear_ex(t_data **lst)
+{
+	t_data	*tmp;
+
+	if (!lst || !*lst)
+		return ;
+	tmp = NULL;
+	while (*lst != NULL)
+	{
+		tmp = (*lst)->next;
+		free((*lst)->name);
+		(*lst)->name = NULL;
+		free(*lst);
+		*lst = tmp;
+	}
+	*lst = NULL;
+}
+
+t_data		*ft_lstnew_ex(char *name, long s_time, long n_time)
+{
+	t_data	*newlist;
+
+	if (!(newlist = (t_data *)malloc(sizeof(t_data))))
+		return (NULL);
+	if (!(newlist->name = ft_strdup(name)))
+		return (NULL);
 	newlist->s_time = s_time;
 	newlist->n_time = n_time;
 	newlist->next = NULL;
 	return (newlist);
 }
 
-void		ft_lstadd_front(t_list **lst, t_list *new)
+int			ft_lstadd_front_ex(t_data **lst, t_data *new)
 {
 	if (!lst || !new)
-		return ;
+		return (-1);
 	new->next = *lst;
 	*lst = new;
+	return (1);
 }
 
-int		ft_lstsize(t_list *lst)
+int			ft_lstsize_ex(t_data *lst)
 {
-	t_list	*curr_lst;
+	t_data	*curr_lst;
 	int		i;
 
 	if (lst == NULL)
@@ -36,40 +76,4 @@ int		ft_lstsize(t_list *lst)
 		i++;
 	}
 	return (i);
-}
-
-void		ft_lstswap(t_list **list)
-{
-	long	tmp1;
-	long	tmp2;
-	char	*tmp3;
-
-	tmp1 = (*list)->s_time;
-	tmp2 = (*list)->n_time;
-	tmp3 = (*list)->name;
-	(*list)->s_time = (*list)->next->s_time;
-	(*list)->n_time = (*list)->next->n_time;
-	(*list)->name = (*list)->next->name;
-	(*list)->next->s_time = tmp1;
-	(*list)->next->n_time = tmp2;
-	(*list)->next->name = tmp3;
-}
-
-void	ft_lstclear(t_list **lst)
-{
-	t_list	*tmp;
-
-	if (!lst || !*lst)
-		return ;
-	tmp = NULL;
-	while (*lst != NULL)
-	{
-		tmp = (*lst)->next;
-		(*lst)->s_time = 0;
-		(*lst)->n_time = 0;
-		(*lst)->name = NULL;
-		free(*lst);
-		*lst = tmp;
-	}
-	*lst = NULL;
 }
