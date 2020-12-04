@@ -6,7 +6,7 @@
 /*   By: kmorimot <kmorimot@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 21:08:28 by kmorimot          #+#    #+#             */
-/*   Updated: 2020/12/04 22:17:20 by kmorimot         ###   ########.fr       */
+/*   Updated: 2020/12/04 23:00:00 by kmorimot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ t_data		*ft_lstnew_first_except_hidden_files(struct dirent **dirst,
 	{
 		*flag = 1;
 		lstat((*dirst)->d_name, &buf);
-		if (!(list = ft_lstnew_ex((*dirst)->d_name, (long)buf.st_mtimespec.tv_sec,
-				(long)buf.st_mtimespec.tv_nsec)))
+		if (!(list = ft_lstnew_ex((*dirst)->d_name,
+			(long)buf.st_mtimespec.tv_sec, (long)buf.st_mtimespec.tv_nsec)))
 			return (NULL);
 	}
 	return (list);
@@ -65,26 +65,21 @@ void		ft_mini_ls(char *path)
 	struct dirent	*dirst;
 	t_data			*list;
 	int				flag;
-	int				i;
 
 	dirst = NULL;
 	if (ft_opendir(path, &dir) == -1)
 		return ;
 	flag = 0;
 	while (flag == 0)
-		if (!(list = ft_lstnew_first_except_hidden_files(&dirst, &dir, &flag)) && flag == 1)
+		if (!(list = ft_lstnew_first_except_hidden_files(&dirst, &dir, &flag))
+				&& flag == 1)
 			return (ft_lstclear_and_closedir(&list, &dir));
-	i = 1;
-	while ((dirst = readdir(dir)) != NULL && i++ < 10000)
-		if ((errno != 0) || (ft_lstadd_except_hidden_files(&dirst, &list)) == -1)
+	while ((dirst = readdir(dir)) != NULL)
+		if ((errno != 0)
+				|| (ft_lstadd_except_hidden_files(&dirst, &list)) == -1)
 			return (ft_lstclear_and_closedir(&list, &dir));
-	if (i >= 10000)
-		write(2, "Too many files\n", 15);
-	else
-	{
-		ft_lst_sort(&list);
-		ft_putlst(list);
-	}
+	ft_lst_sort(&list);
+	ft_putlst(list);
 	ft_lstclear_ex(&list);
 	closedir(dir);
 }
