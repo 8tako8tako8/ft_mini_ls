@@ -6,7 +6,7 @@
 /*   By: kmorimot <kmorimot@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 21:08:28 by kmorimot          #+#    #+#             */
-/*   Updated: 2020/12/04 23:00:00 by kmorimot         ###   ########.fr       */
+/*   Updated: 2020/12/05 21:00:08 by kmorimot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,11 @@ t_data		*ft_lstnew_first_except_hidden_files(struct dirent **dirst,
 	t_data			*list;
 
 	list = NULL;
-	*dirst = readdir(*dir);
-	if (errno != 0)
+	if ((*dirst = readdir(*dir)) == NULL)
+	{
+		*flag = 1;
 		return (NULL);
+	}
 	if ((*dirst)->d_name[0] != '.')
 	{
 		*flag = 1;
@@ -73,7 +75,7 @@ void		ft_mini_ls(char *path)
 	while (flag == 0)
 		if (!(list = ft_lstnew_first_except_hidden_files(&dirst, &dir, &flag))
 				&& flag == 1)
-			return (ft_lstclear_and_closedir(&list, &dir));
+			return ;
 	while ((dirst = readdir(dir)) != NULL)
 		if ((errno != 0)
 				|| (ft_lstadd_except_hidden_files(&dirst, &list)) == -1)
@@ -81,7 +83,11 @@ void		ft_mini_ls(char *path)
 	ft_lst_sort(&list);
 	ft_putlst(list);
 	ft_lstclear_ex(&list);
-	closedir(dir);
+	if (!closedir(dir))
+	{
+		perror(path);
+		return ;
+	}
 }
 
 int			main(int argc, char **argv)
