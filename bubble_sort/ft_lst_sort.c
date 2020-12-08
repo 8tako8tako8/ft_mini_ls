@@ -6,7 +6,7 @@
 /*   By: kmorimot <kmorimot@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 19:54:08 by kmorimot          #+#    #+#             */
-/*   Updated: 2020/12/06 14:22:50 by kmorimot         ###   ########.fr       */
+/*   Updated: 2020/12/08 15:02:07 by kmorimot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_cmp_time_and_name_to_sort(t_data *cur_list)
 	}
 }
 
-void	ft_lst_sort(t_data **begin_list)
+void	ft_lst_bubble_sort(t_data **begin_list)
 {
 	t_data	*cur_list;
 	int		list_size;

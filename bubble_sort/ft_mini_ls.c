@@ -6,14 +6,14 @@
 /*   By: kmorimot <kmorimot@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 21:08:28 by kmorimot          #+#    #+#             */
-/*   Updated: 2020/12/08 14:50:45 by kmorimot         ###   ########.fr       */
+/*   Updated: 2020/12/08 15:10:53 by kmorimot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_mini_ls.h"
 #include "libft/libft.h"
 
-t_data  *ft_merge_lst(t_data *list1, t_data *list2)
+/* t_data  *ft_merge_lst(t_data *list1, t_data *list2)
 {
     t_data  *newlst_end;
     t_data  newlst_head;
@@ -65,7 +65,7 @@ t_data  *ft_lst_merge_sort(t_data *list)
     sepa = front->next;
     front->next = NULL;
     return (ft_merge_lst(ft_lst_merge_sort(list), ft_lst_merge_sort(sepa)));
-}
+} */
 
 int			ft_lstadd_except_hidden_files(struct dirent **dirst, t_data **list)
 {
@@ -134,7 +134,7 @@ void		ft_mini_ls(char *path)
 		if ((errno != 0)
 				|| (ft_lstadd_except_hidden_files(&dirst, &list)) == -1)
 			return (ft_lstclear_and_closedir(&list, &dir));
-	list = ft_lst_merge_sort(list);
+	ft_lst_bubble_sort(&list);
 	ft_putlst(list);
 	ft_lstclear_ex(&list);
 	closedir(dir);
@@ -158,6 +158,6 @@ int			main(int argc, char **argv)
 	(void)argv[0];
 	free(path);
 	end = clock();
-	printf("%f\n", (double)(end - start) / CLOCKS_PER_SEC);
+	printf("%.2f\n", (double)(end - start) / CLOCKS_PER_SEC);
 	return (0);
 }

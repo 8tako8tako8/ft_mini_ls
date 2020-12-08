@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME := ft_mini_ls
+NAME := ft_mini_ls_bubble
 CC := gcc
 CFLAGS := -Wall -Wextra -Werror
 SRC_DIR := ./

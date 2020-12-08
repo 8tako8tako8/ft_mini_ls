@@ -6,11 +6,11 @@
 #    By: kmorimot <kmorimot@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/12 13:07:44 by kmorimot          #+#    #+#              #
-#    Updated: 2020/12/04 19:49:14 by kmorimot         ###   ########.fr        #
+#    Updated: 2020/12/08 15:04:05 by kmorimot         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME := ft_mini_ls
+NAME := ft_mini_ls_merge
 CC := gcc
 CFLAGS := -Wall -Wextra -Werror
 SRC_DIR := ./

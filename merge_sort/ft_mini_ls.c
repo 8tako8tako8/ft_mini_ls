@@ -6,7 +6,7 @@
 /*   By: kmorimot <kmorimot@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 21:08:28 by kmorimot          #+#    #+#             */
-/*   Updated: 2020/12/08 14:50:45 by kmorimot         ###   ########.fr       */
+/*   Updated: 2020/12/08 15:13:46 by kmorimot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,6 @@ int			main(int argc, char **argv)
 	(void)argv[0];
 	free(path);
 	end = clock();
-	printf("%f\n", (double)(end - start) / CLOCKS_PER_SEC);
+	printf("%.2f\n", (double)(end - start) / CLOCKS_PER_SEC);
 	return (0);
 }

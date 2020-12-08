@@ -6,7 +6,7 @@
 /*   By: kmorimot <kmorimot@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 19:55:00 by kmorimot          #+#    #+#             */
-/*   Updated: 2020/12/08 14:48:24 by kmorimot         ###   ########.fr       */
+/*   Updated: 2020/12/08 15:03:00 by kmorimot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int					ft_lstadd_front_ex(t_data **lst, t_data *new);
 void				ft_lstswap(t_data **list);
 void				ft_lstclear_ex(t_data **lst);
 void				ft_cmp_time_and_name_to_sort(t_data *cur_list);
-void				ft_lst_sort(t_data **begin_list);
+void				ft_lst_bubble_sort(t_data **begin_list);
 int					ft_lstadd_except_hidden_files(struct dirent **dirst,
 						t_data **list);
 t_data				*ft_lstnew_first_except_hidden_files(struct dirent **dirst,
